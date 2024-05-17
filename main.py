@@ -79,40 +79,63 @@ def mutate(tables, mutation_rate):
 
 def genetic_algorithm(students, num_tables, table_size, population_size, generations, mutation_rate):
     population = generate_initial_population(students, num_tables, table_size, population_size)
+    best_solution = None
+    best_fitness = -1
     for generation in range(generations):
         fitnesses = [fitness(tables) for tables in population]
+        current_best_fitness = max(fitnesses)
+        if current_best_fitness > best_fitness:
+            best_fitness = current_best_fitness
+            best_solution = population[np.argmax(fitnesses)]
         if generation % 100 == 0:
-            print(f'Generation {generation}: Best fitness = {max(fitnesses)}')
+            print(f'Generation {generation}: Best fitness = {best_fitness}')
         parents = select_parents(population, fitnesses, population_size // 2)
         offspring = crossover(parents, population_size - len(parents))
         for child in offspring:
             mutate(child, mutation_rate)
         population = list(parents) + offspring
-    best_solution = population[np.argmax(fitnesses)]
     return best_solution
-
+  
 students = [
-    Student('Alice', ['Bob', 'Charlie']),
-    Student('Bob', ['Alice', 'David']),
-    Student('Charlie', ['Alice']),
-    Student('David', ['Bob']),
-    Student('Eve', ['Frank']),
-    Student('Frank', ['Eve']),
+    Student('Alice', ['Paul', 'Oscar', 'Kate']),
+    Student('Bob', ['Dylan', 'Uma', 'Tina', 'David']),
+    Student('Charlie', ['Eve', 'Frank']),
+    Student('David', ['Leo']),
+    Student('Eve', ['Dylan']),
+    Student('Frank', ['Alice', 'Bob', 'Tina', 'Jack']),
+    Student('Grace', ['Charlie']),
+    Student('Hannah', ['Jack', 'Uma', 'Chloe', 'Harry']),
+    Student('Ivy', ['Charlie']),
+    Student('Jack', ['Bob', 'Alice', 'David']),
+    Student('Kate', ['Frank', 'Leo', 'Gina']),
+    Student('Leo', ['Isla', 'Jack', 'Frank', 'Ivy']),
+    Student('Mia', ['Ruby', 'Uma']),
+    Student('Nina', ['Bob']),
+    Student('Oscar', ['Violet']),
+    Student('Paul', ['Grace']),
+    Student('Quinn', ['Tina']),
+    Student('Ruby', ['Hannah', 'Grace', 'Kate']),
+    Student('Sam', ['Tina', 'Gina', 'Paul', 'Kate']),
+    Student('Tina', ['Yara', 'Harry']),
+    Student('Uma', ['Alice']),
+    Student('Violet', ['Uma', 'Oscar']),
+    Student('Will', ['Gina', 'Eve', 'Quinn', 'Alice']),
+    Student('Xander', ['Gina', 'Ruby']),
+    Student('Yara', ['Ben', 'Hannah']),
+    Student('Zack', ['Nina', 'Paul', 'Frank']),
+    Student('Ava', ['Paul', 'Sam', 'Oscar', 'Xander']),
+    Student('Ben', ['Ava', 'Harry', 'Nina', 'Xander']),
+    Student('Chloe', ['Sam', 'Ben']),
+    Student('Dylan', ['Hannah', 'Bob']),
+    Student('Ellie', ['Quinn', 'Alice', 'Tina']),
+    Student('Finn', ['Mia', 'Jack', 'Ellie', 'Chloe']),
+    Student('Gina', ['Nina', 'Tina', 'Jack']),
+    Student('Harry', ['Sam', 'Nina']),
+    Student('Isla', ['Ava', 'David', 'Violet']),
 ]
-
-'''
-student_names = [f'Student{i+1}' for i in range(36)]
-students = []
-for name in student_names:
-    preferences = random.sample(student_names, k=random.randint(0, 5))  # Each student prefers 0 to 5 random other students
-    if name in preferences:
-        preferences.remove(name)  # Ensure a student does not prefer themselves
-    students.append(Student(name, preferences))
-'''
-
-num_tables = 2
-table_size = 3
-population_size = 100
+num_tables = 9
+table_size = 4
+population_size = 50
 generations = 5000
 mutation_rate = 0.1
 
