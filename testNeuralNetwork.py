@@ -1,47 +1,59 @@
-import numpy as np
+import random
 
-input_value = np.array([[0,0], [0,1], [1,1], [1,0]])
-input_value.shape
-#print(input_value)
+class Student:
+    def __init__(self, name, friends, random_students=None):
+        self.name = name
+        self.friends = friends
+        self.random_students = random_students if random_students else []
 
-output = np.array([0,1,1,0])
-output = output.reshape(4,1)
-#print(output.shape)
+# Initial list of students with friends
+students = [
+    Student('Alice', ['Bob', 'Charlie', 'David']),
+    Student('Bob', ['Alice']),
+    Student('Charlie', ['Alice', 'Uma', 'Chloe']),
+    Student('David', ['Alice', 'Bob', 'Charlie']),
+    Student('Eve', ['Frank', 'Grace', 'Hannah', 'Ivy']),
+    Student('Frank', ['Alice', 'Bob', 'Tina', 'Jack']),
+    Student('Grace', ['Charlie']),
+    Student('Hannah', ['Jack', 'Uma', 'Chloe', 'Harry']),
+    Student('Ivy', ['Charlie']),
+    Student('Jack', ['Bob', 'Alice', 'David']),
+    Student('Kate', ['Frank', 'Leo', 'Gina']),
+    Student('Leo', ['Isla', 'Jack', 'Frank', 'Ivy']),
+    Student('Mia', ['Ruby', 'Uma']),
+    Student('Nina', ['Bob']),
+    Student('Oscar', ['Violet']),
+    Student('Paul', ['Grace']),
+    Student('Quinn', ['Tina']),
+    Student('Ruby', ['Hannah', 'Grace', 'Kate']),
+    Student('Sam', ['Tina', 'Gina', 'Paul', 'Kate']),
+    Student('Tina', ['Yara', 'Harry']),
+    Student('Uma', ['Alice']),
+    Student('Violet', ['Uma', 'Oscar']),
+    Student('Will', ['Gina', 'Eve', 'Quinn', 'Alice']),
+    Student('Xander', ['Gina', 'Ruby']),
+    Student('Yara', ['Ben', 'Hannah']),
+    Student('Zack', ['Nina', 'Paul', 'Frank']),
+    Student('Ava', ['Paul', 'Sam', 'Oscar', 'Xander']),
+    Student('Ben', ['Ava', 'Harry', 'Nina', 'Xander']),
+    Student('Chloe', ['Sam', 'Ben']),
+    Student('Dylan', ['Hannah', 'Bob']),
+    Student('Ellie', ['Quinn', 'Alice', 'Tina']),
+    Student('Finn', ['Mia', 'Jack', 'Ellie', 'Chloe']),
+    Student('Gina', ['Nina', 'Tina', 'Jack']),
+    Student('Harry', ['Sam', 'Nina']),
+    Student('Isla', ['Ava', 'David', 'Violet']),
+    Student('Erick', ['Ben', 'Xander'])
+]
 
-weights = np.array([[0.1], [0.2]])
-#print(weights)
-bias = 0.3
+# Adding random students to around a third of the students
+num_students = len(students)
+students_to_update = random.sample(students, num_students // 3)
 
-def sigmoid_func(x):
-    return 1/(1+np.exp(-x))
+for student in students_to_update:
+    random_students = random.sample(students, random.randint(1, 2))
+    student.random_students = [s.name for s in random_students if s.name != student.name]
 
-def der(x):
-    return sigmoid_func(x) * (1-sigmoid_func(x))
-
-for epochs in range(10000):
-    input_arr = input_value
-
-    weighted_sum = np.dot(input_arr, weights) + bias
-    first_output = sigmoid_func(weighted_sum)
-
-    error = first_output - output
-    total_error = np.square(np.subtract(first_output,output)).mean()
-
-    first_der = error
-    second_der = der(first_output)
-    derivative = first_der * second_der
-
-    t_input = input_value.T
-    final_derivative = np.dot(t_input, derivative)
-
-    weights = weights - .05 * final_derivative
-    for i in derivative:
-        bias = bias - .05 * i
-
-print(weights)
-print(bias)
-
-pred = np.array([0,1])
-result = np.dot(pred,weights) + bias
-res = sigmoid_func(result)
-print(res)
+# Checking the updated list of students
+for student in students:
+    print(f"Student('{student.name}', {student.friends}, {student.random_students}),")

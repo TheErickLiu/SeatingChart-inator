@@ -1,11 +1,11 @@
 import random
-from collections import defaultdict
 import numpy as np
 
 class Student:
-    def __init__(self, name, preferences):
+    def __init__(self, name, preferences, avoids):
         self.name = name
         self.preferences = preferences
+        self.avoids = avoids
 
 class Table:
     def __init__(self, size):
@@ -45,6 +45,12 @@ def count_satisfied_preferences(tables):
                     score += 1
                     table_preference_count += 1
         preference_counts.append(table_preference_count)
+    
+    for table in tables:
+        for student in table.students:
+            for avoid in student.avoids:
+                if avoid in [s.name for s in table.students]:
+                    score -= 1
     
     gini_coefficient = calculate_gini_coefficient(preference_counts)
     
@@ -124,42 +130,42 @@ def find_best_seating(students, num_tables, table_size, trials=10):
     return best_seating
 
 students = [
-    Student('Alice', ['Bob', 'Charlie', 'David']),
-    Student('Bob', ['Alice']),
-    Student('Charlie', ['Alice', 'Uma', 'Chloe']),
-    Student('David', ['Alice', 'Bob', 'Charlie']),
-    Student('Eve', ['Frank', 'Grace', 'Hannah', 'Ivy']),
-    Student('Frank', ['Alice', 'Bob', 'Tina', 'Jack']),
-    Student('Grace', ['Charlie']),
-    Student('Hannah', ['Jack', 'Uma', 'Chloe', 'Harry']),
-    Student('Ivy', ['Charlie']),
-    Student('Jack', ['Bob', 'Alice', 'David']),
-    Student('Kate', ['Frank', 'Leo', 'Gina']),
-    Student('Leo', ['Isla', 'Jack', 'Frank', 'Ivy']),
-    Student('Mia', ['Ruby', 'Uma']),
-    Student('Nina', ['Bob']),
-    Student('Oscar', ['Violet']),
-    Student('Paul', ['Grace']),
-    Student('Quinn', ['Tina']),
-    Student('Ruby', ['Hannah', 'Grace', 'Kate']),
-    Student('Sam', ['Tina', 'Gina', 'Paul', 'Kate']),
-    Student('Tina', ['Yara', 'Harry']),
-    Student('Uma', ['Alice']),
-    Student('Violet', ['Uma', 'Oscar']),
-    Student('Will', ['Gina', 'Eve', 'Quinn', 'Alice']),
-    Student('Xander', ['Gina', 'Ruby']),
-    Student('Yara', ['Ben', 'Hannah']),
-    Student('Zack', ['Nina', 'Paul', 'Frank']),
-    Student('Ava', ['Paul', 'Sam', 'Oscar', 'Xander']),
-    Student('Ben', ['Ava', 'Harry', 'Nina', 'Xander']),
-    Student('Chloe', ['Sam', 'Ben']),
-    Student('Dylan', ['Hannah', 'Bob']),
-    Student('Ellie', ['Quinn', 'Alice', 'Tina']),
-    Student('Finn', ['Mia', 'Jack', 'Ellie', 'Chloe']),
-    Student('Gina', ['Nina', 'Tina', 'Jack']),
-    Student('Harry', ['Sam', 'Nina']),
-    Student('Isla', ['Ava', 'David', 'Violet']),
-    Student('Erick', ['Ben', 'Xander'])
+    Student('Alice', ['Bob', 'Charlie', 'David'], []),
+    Student('Bob', ['Alice'], ['Yara', 'Tina']),
+    Student('Charlie', ['Alice', 'Uma', 'Chloe'], []),
+    Student('David', ['Alice', 'Bob', 'Charlie'], []),
+    Student('Eve', ['Frank', 'Grace', 'Hannah', 'Ivy'], ['Paul', 'Charlie']),
+    Student('Frank', ['Alice', 'Bob', 'Tina', 'Jack'], ['Kate']),
+    Student('Grace', ['Charlie'], ['Violet']),
+    Student('Hannah', ['Jack', 'Uma', 'Chloe', 'Harry'], ['Erick']),
+    Student('Ivy', ['Charlie'], []),
+    Student('Jack', ['Bob', 'Alice', 'David'], ['Tina', 'Ruby']),
+    Student('Kate', ['Frank', 'Leo', 'Gina'], []),
+    Student('Leo', ['Isla', 'Jack', 'Frank', 'Ivy'], []),
+    Student('Mia', ['Ruby', 'Uma'], []),
+    Student('Nina', ['Bob'], ['Ava']),
+    Student('Oscar', ['Violet'], []),
+    Student('Paul', ['Grace'], ['Charlie']),
+    Student('Quinn', ['Tina'], []),
+    Student('Ruby', ['Hannah', 'Grace', 'Kate'], []),
+    Student('Sam', ['Tina', 'Gina', 'Paul', 'Kate'], []),
+    Student('Tina', ['Yara', 'Harry'], []),
+    Student('Uma', ['Alice'], []),
+    Student('Violet', ['Uma', 'Oscar'], ['Frank', 'Ivy']),
+    Student('Will', ['Gina', 'Eve', 'Quinn', 'Alice'], []),
+    Student('Xander', ['Gina', 'Ruby'], []),
+    Student('Yara', ['Ben', 'Hannah'], []),
+    Student('Zack', ['Nina', 'Paul', 'Frank'], []),
+    Student('Ava', ['Paul', 'Sam', 'Oscar', 'Xander'], []),
+    Student('Ben', ['Ava', 'Harry', 'Nina', 'Xander'], ['Ava']),
+    Student('Chloe', ['Sam', 'Ben'], ['Gina', 'Quinn']),
+    Student('Dylan', ['Hannah', 'Bob'], []),
+    Student('Ellie', ['Quinn', 'Alice', 'Tina'], []),
+    Student('Finn', ['Mia', 'Jack', 'Ellie', 'Chloe'], []),
+    Student('Gina', ['Nina', 'Tina', 'Jack'], ['Ruby']),
+    Student('Harry', ['Sam', 'Nina'], []),
+    Student('Isla', ['Ava', 'David', 'Violet'], []),
+    Student('Erick', ['Ben', 'Xander'], [])
 ]
 
 num_tables = 9
