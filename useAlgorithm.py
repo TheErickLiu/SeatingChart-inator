@@ -55,10 +55,10 @@ def count_satisfied_preferences(tables):
     gini_coefficient = calculate_gini_coefficient(preference_counts)
     
     if gini_coefficient >= 0 and gini_coefficient < 0.5:
-        reward = 10 - round(gini_coefficient, 1) * 10
+        reward = 10 - round(gini_coefficient, 2) * 10
         score += reward
     else:
-        penalty = round(gini_coefficient, 1) * 10
+        penalty = round(gini_coefficient, 2) * 10
         score -= penalty
     
     return score, gini_coefficient
